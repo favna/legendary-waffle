@@ -2,9 +2,7 @@
  * Decorator that sets the enumerable property of a class field to the desired value.
  * @param value Whether the property should be enumerable or not
  */
-
-// @ts-ignore asdasd
-export function NonEnumerable<This, Value>(value: Value, context: ClassFieldDecoratorContext<This, Value>) {
+export function NonEnumerable<This, Value>(_value: undefined, context: ClassFieldDecoratorContext<This, Value>) {
 	return function (this: This, initialValue: Value): Value {
 		Object.defineProperty(this, context.name, { enumerable: false, configurable: true, writable: true, value: initialValue });
 		return initialValue as Value;
