@@ -4,10 +4,10 @@
  */
 
 export function NonEnumerable<This, Value>(value: Value, context: ClassFieldDecoratorContext<This, Value>) {
-  return function (this: This, initialValue: Value): Value {
-    Object.defineProperty(this, context.name, { enumerable: false, configurable: true, writable: true, value: initialValue });
-    return initialValue as Value;
-  };
+	return function (this: This, initialValue: Value): Value {
+		Object.defineProperty(this, context.name, { enumerable: false, configurable: true, writable: true, value: initialValue });
+		return initialValue as Value;
+	};
 }
 
 // export function NonEnumerable<This extends ClassWithName, Value = never>(shouldBeEnumerable?: boolean) {

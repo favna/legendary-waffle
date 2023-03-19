@@ -5,37 +5,37 @@ import type { ClassMethodDecorator, ClassMethodDecoratorTarget, FunctionFallback
 import { createFunctionPrecondition } from './utils';
 
 export enum DecoratorIdentifiers {
-  RequiresClientPermissionsGuildOnly = 'requiresClientPermissionsGuildOnly',
-  RequiresClientPermissionsMissingPermissions = 'requiresClientPermissionsMissingPermissions',
-  RequiresUserPermissionsGuildOnly = 'requiresUserPermissionsGuildOnly',
-  RequiresUserPermissionsMissingPermissions = 'requiresUserPermissionsMissingPermissions'
+	RequiresClientPermissionsGuildOnly = 'requiresClientPermissionsGuildOnly',
+	RequiresClientPermissionsMissingPermissions = 'requiresClientPermissionsMissingPermissions',
+	RequiresUserPermissionsGuildOnly = 'requiresUserPermissionsGuildOnly',
+	RequiresUserPermissionsMissingPermissions = 'requiresUserPermissionsMissingPermissions'
 }
 
 export const DMAvailablePermissions = new PermissionsBitField(
-  ~new PermissionsBitField([
-    //
-    PermissionFlagsBits.AddReactions,
-    PermissionFlagsBits.AttachFiles,
-    PermissionFlagsBits.EmbedLinks,
-    PermissionFlagsBits.ReadMessageHistory,
-    PermissionFlagsBits.SendMessages,
-    PermissionFlagsBits.UseExternalEmojis,
-    PermissionFlagsBits.ViewChannel
-  ]).bitfield & PermissionsBitField.All
+	~new PermissionsBitField([
+		//
+		PermissionFlagsBits.AddReactions,
+		PermissionFlagsBits.AttachFiles,
+		PermissionFlagsBits.EmbedLinks,
+		PermissionFlagsBits.ReadMessageHistory,
+		PermissionFlagsBits.SendMessages,
+		PermissionFlagsBits.UseExternalEmojis,
+		PermissionFlagsBits.ViewChannel
+	]).bitfield & PermissionsBitField.All
 );
 
 export const DMAvailableUserPermissions = new PermissionsBitField(
-  ~new PermissionsBitField([
-    PermissionFlagsBits.AddReactions,
-    PermissionFlagsBits.AttachFiles,
-    PermissionFlagsBits.EmbedLinks,
-    PermissionFlagsBits.ReadMessageHistory,
-    PermissionFlagsBits.SendMessages,
-    PermissionFlagsBits.UseExternalEmojis,
-    PermissionFlagsBits.ViewChannel,
-    PermissionFlagsBits.UseExternalStickers,
-    PermissionFlagsBits.MentionEveryone
-  ]).bitfield & PermissionsBitField.All
+	~new PermissionsBitField([
+		PermissionFlagsBits.AddReactions,
+		PermissionFlagsBits.AttachFiles,
+		PermissionFlagsBits.EmbedLinks,
+		PermissionFlagsBits.ReadMessageHistory,
+		PermissionFlagsBits.SendMessages,
+		PermissionFlagsBits.UseExternalEmojis,
+		PermissionFlagsBits.ViewChannel,
+		PermissionFlagsBits.UseExternalStickers,
+		PermissionFlagsBits.MentionEveryone
+	]).bitfield & PermissionsBitField.All
 );
 
 /**
@@ -79,36 +79,36 @@ export const DMAvailableUserPermissions = new PermissionsBitField(
  * ```
  */
 export function RequiresClientPermissions<This, Args extends [message: Message], Return>(
-  ...permissionsResolvable: PermissionResolvable[]
+	...permissionsResolvable: PermissionResolvable[]
 ): ClassMethodDecorator<This, Args, Return> {
-  const resolved = new PermissionsBitField(permissionsResolvable);
-  const resolvedIncludesServerPermissions = Boolean(resolved.bitfield & DMAvailablePermissions.bitfield);
+	const resolved = new PermissionsBitField(permissionsResolvable);
+	const resolvedIncludesServerPermissions = Boolean(resolved.bitfield & DMAvailablePermissions.bitfield);
 
-  return (target: ClassMethodDecoratorTarget<This, Args, Return>, context: StrictClassMethodDecoratorContext<This, Args, Return>) =>
-    createFunctionPrecondition(target, context, (message: Message) => {
-      if (resolvedIncludesServerPermissions && isDMChannel(message.channel)) {
-        throw new UserError({
-          identifier: DecoratorIdentifiers.RequiresClientPermissionsGuildOnly,
-          message: 'Sorry, but that command can only be used in a server because I do not have sufficient permissions in DMs'
-        });
-      }
+	return (target: ClassMethodDecoratorTarget<This, Args, Return>, context: StrictClassMethodDecoratorContext<This, Args, Return>) =>
+		createFunctionPrecondition(target, context, (message: Message) => {
+			if (resolvedIncludesServerPermissions && isDMChannel(message.channel)) {
+				throw new UserError({
+					identifier: DecoratorIdentifiers.RequiresClientPermissionsGuildOnly,
+					message: 'Sorry, but that command can only be used in a server because I do not have sufficient permissions in DMs'
+				});
+			}
 
-      if (isGuildBasedChannel(message.channel)) {
-        const missingPermissions = message.channel.permissionsFor(message.guild!.members.me!).missing(resolved);
+			if (isGuildBasedChannel(message.channel)) {
+				const missingPermissions = message.channel.permissionsFor(message.guild!.members.me!).missing(resolved);
 
-        if (missingPermissions.length) {
-          throw new UserError({
-            identifier: DecoratorIdentifiers.RequiresClientPermissionsMissingPermissions,
-            message: `Sorry, but I am not allowed to do that. I am missing the permissions: ${missingPermissions}`,
-            context: {
-              missing: missingPermissions
-            }
-          });
-        }
-      }
+				if (missingPermissions.length) {
+					throw new UserError({
+						identifier: DecoratorIdentifiers.RequiresClientPermissionsMissingPermissions,
+						message: `Sorry, but I am not allowed to do that. I am missing the permissions: ${missingPermissions}`,
+						context: {
+							missing: missingPermissions
+						}
+					});
+				}
+			}
 
-      return true;
-    });
+			return true;
+		});
 }
 
 /**
@@ -152,36 +152,36 @@ export function RequiresClientPermissions<This, Args extends [message: Message],
  * ```
  */
 export function RequiresUserPermissions<This, Args extends [message: Message], Return>(
-  ...permissionsResolvable: PermissionResolvable[]
+	...permissionsResolvable: PermissionResolvable[]
 ): ClassMethodDecorator<This, Args, Return> {
-  const resolved = new PermissionsBitField(permissionsResolvable);
-  const resolvedIncludesServerPermissions = Boolean(resolved.bitfield & DMAvailableUserPermissions.bitfield);
+	const resolved = new PermissionsBitField(permissionsResolvable);
+	const resolvedIncludesServerPermissions = Boolean(resolved.bitfield & DMAvailableUserPermissions.bitfield);
 
-  return (target: ClassMethodDecoratorTarget<This, Args, Return>, context: StrictClassMethodDecoratorContext<This, Args, Return>) =>
-    createFunctionPrecondition(target, context, (message: Message) => {
-      if (resolvedIncludesServerPermissions && isDMChannel(message.channel)) {
-        throw new UserError({
-          identifier: DecoratorIdentifiers.RequiresUserPermissionsGuildOnly,
-          message: 'Sorry, but that command can only be used in a server because you do not have sufficient permissions in DMs'
-        });
-      }
+	return (target: ClassMethodDecoratorTarget<This, Args, Return>, context: StrictClassMethodDecoratorContext<This, Args, Return>) =>
+		createFunctionPrecondition(target, context, (message: Message) => {
+			if (resolvedIncludesServerPermissions && isDMChannel(message.channel)) {
+				throw new UserError({
+					identifier: DecoratorIdentifiers.RequiresUserPermissionsGuildOnly,
+					message: 'Sorry, but that command can only be used in a server because you do not have sufficient permissions in DMs'
+				});
+			}
 
-      if (isGuildBasedChannel(message.channel)) {
-        const missingPermissions = message.channel.permissionsFor(message.member!).missing(resolved);
+			if (isGuildBasedChannel(message.channel)) {
+				const missingPermissions = message.channel.permissionsFor(message.member!).missing(resolved);
 
-        if (missingPermissions.length) {
-          throw new UserError({
-            identifier: DecoratorIdentifiers.RequiresUserPermissionsMissingPermissions,
-            message: `Sorry, but you are not allowed to do that. You are missing the permissions: ${missingPermissions}`,
-            context: {
-              missing: missingPermissions
-            }
-          });
-        }
-      }
+				if (missingPermissions.length) {
+					throw new UserError({
+						identifier: DecoratorIdentifiers.RequiresUserPermissionsMissingPermissions,
+						message: `Sorry, but you are not allowed to do that. You are missing the permissions: ${missingPermissions}`,
+						context: {
+							missing: missingPermissions
+						}
+					});
+				}
+			}
 
-      return true;
-    });
+			return true;
+		});
 }
 
 /**
@@ -190,10 +190,10 @@ export function RequiresUserPermissions<This, Args extends [message: Message], R
  * @param fallback The fallback value passed to {@link createFunctionInhibitor}
  */
 export function RequiresGuildContext<This, Args extends [message: Message], Return>(
-  fallback: FunctionFallback<This, Args, Return> = (): Return => undefined as Return
+	fallback: FunctionFallback<This, Args, Return> = (): Return => undefined as Return
 ): ClassMethodDecorator<This, Args, Return> {
-  return (target: ClassMethodDecoratorTarget<This, Args, Return>, context: StrictClassMethodDecoratorContext<This, Args, Return>) =>
-    createFunctionPrecondition(target, context, (message: Message) => message.inGuild(), fallback);
+	return (target: ClassMethodDecoratorTarget<This, Args, Return>, context: StrictClassMethodDecoratorContext<This, Args, Return>) =>
+		createFunctionPrecondition(target, context, (message: Message) => message.inGuild(), fallback);
 }
 
 /**
@@ -202,8 +202,8 @@ export function RequiresGuildContext<This, Args extends [message: Message], Retu
  * @param fallback The fallback value passed to {@link createFunctionInhibitor}
  */
 export function RequiresDMContext<This, Args extends [message: Message], Return>(
-  fallback: FunctionFallback<This, Args, Return> = (): Return => undefined as Return
+	fallback: FunctionFallback<This, Args, Return> = (): Return => undefined as Return
 ): ClassMethodDecorator<This, Args, Return> {
-  return (target: ClassMethodDecoratorTarget<This, Args, Return>, context: StrictClassMethodDecoratorContext<This, Args, Return>) =>
-    createFunctionPrecondition(target, context, (message: Message) => !message.inGuild(), fallback);
+	return (target: ClassMethodDecoratorTarget<This, Args, Return>, context: StrictClassMethodDecoratorContext<This, Args, Return>) =>
+		createFunctionPrecondition(target, context, (message: Message) => !message.inGuild(), fallback);
 }

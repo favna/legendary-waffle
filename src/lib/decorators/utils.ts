@@ -1,9 +1,9 @@
 import type {
-  ClassMethodDecoratorTarget,
-  FunctionFallback,
-  FunctionPrecondition,
-  MethodDecoratorModifier,
-  StrictClassMethodDecoratorContext
+	ClassMethodDecoratorTarget,
+	FunctionFallback,
+	FunctionPrecondition,
+	MethodDecoratorModifier,
+	StrictClassMethodDecoratorContext
 } from './types';
 
 /**
@@ -24,14 +24,14 @@ import type {
  * ```
  */
 export function createMethodDecorator<This, Args extends unknown[], Return>(
-  target: ClassMethodDecoratorTarget<This, Args, Return>,
-  methodModifier: MethodDecoratorModifier
+	target: ClassMethodDecoratorTarget<This, Args, Return>,
+	methodModifier: MethodDecoratorModifier
 ): ClassMethodDecoratorTarget<This, Args, Return> {
-  methodModifier();
+	methodModifier();
 
-  return function replacementMethod(this: This, ...args: Args) {
-    return target.call(this, ...args);
-  };
+	return function replacementMethod(this: This, ...args: Args) {
+		return target.call(this, ...args);
+	};
 }
 
 /**
@@ -63,13 +63,13 @@ export function createMethodDecorator<This, Args extends unknown[], Return>(
  * @param fallback The fallback value that defines what the method should return in case the precondition fails
  */
 export function createFunctionPrecondition<This, Args extends unknown[], Return>(
-  target: ClassMethodDecoratorTarget<This, Args, Return>,
-  _context: StrictClassMethodDecoratorContext<This, Args, Return>,
-  precondition: FunctionPrecondition<Args>,
-  fallback: FunctionFallback<This, Args, Return> = (): Return => undefined as Return
+	target: ClassMethodDecoratorTarget<This, Args, Return>,
+	_context: StrictClassMethodDecoratorContext<This, Args, Return>,
+	precondition: FunctionPrecondition<Args>,
+	fallback: FunctionFallback<This, Args, Return> = (): Return => undefined as Return
 ): ClassMethodDecoratorTarget<This, Args, Return> {
-  return function replacementMethod(this: This, ...args: Args): Return {
-    const canRun = precondition(...args);
-    return canRun ? target.call(this, ...args) : fallback.call(this, ...args);
-  };
+	return function replacementMethod(this: This, ...args: Args): Return {
+		const canRun = precondition(...args);
+		return canRun ? target.call(this, ...args) : fallback.call(this, ...args);
+	};
 }
