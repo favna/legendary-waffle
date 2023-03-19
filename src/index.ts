@@ -1,6 +1,9 @@
-import { NonEnumerable } from './lib/decorators';
+import { NonEnumerable, NonEnumerableClass } from './lib/decorators';
 
+@NonEnumerableClass
 class SampleClass {
+	public name: string = 'SampleClass';
+
 	public sampleMethod(): void {
 		console.log('Hello World!');
 	}
