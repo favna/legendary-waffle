@@ -1,0 +1,30 @@
+{
+  "name": "legendary-waffle",
+  "main": "dist/index.js",
+  "license": "UNLICENSE",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "start": "node --preserve-symlinks dist/index.js",
+    "dev": "yarn build && yarn start",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@sapphire/framework": "^4.2.2",
+    "@sapphire/utilities": "pr-567",
+    "discord-api-types": "^0.37.36",
+    "discord.js": "^14.8.0"
+  },
+  "devDependencies": {
+    "@sapphire/prettier-config": "pr-567",
+    "@sapphire/ts-config": "pr-567",
+    "@types/node": "^18.15.3",
+    "prettier": "^2.8.4",
+    "typescript": "^5.0.2"
+  },
+  "resolutions": {
+    "@sapphire/shapeshift": "pr-253",
+    "@discordjs/rest@^1.6.0": "patch:@discordjs/rest@npm%3A1.6.0#./.yarn/patches/@discordjs-rest-npm-1.6.0-ecd934f96e.patch"
+  },
+  "packageManager": "yarn@3.5.0"
+}
