@@ -5,6 +5,7 @@ class SampleClass {
 		console.log('Hello World!');
 	}
 
+	// @ts-ignore asdasd
 	@NonEnumerable
 	public sampleField: string = 'Hello World!';
 }
