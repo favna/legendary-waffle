@@ -1,4 +1,4 @@
-import type { Piece } from '@sapphire/pieces';
+import type { Piece, Container } from '@sapphire/pieces';
 import type { Ctor } from '@sapphire/utilities';
 
 /**
@@ -84,3 +84,13 @@ export type EnumerableClassReturnType<Class extends Ctor<ConstructorParameters<t
 	DecoratedClass: Class,
 	_context: ClassDecoratorContext
 ) => void | Class;
+
+/**
+ * The parameters for the `ApplyOptions` decorator when used with a callback function
+ */
+export interface ApplyOptionsCallbackParameters {
+	/** The {@link Container} of Sapphire */
+	container: Container;
+	/** The context of the current piece */
+	context: Piece.Context;
+}
