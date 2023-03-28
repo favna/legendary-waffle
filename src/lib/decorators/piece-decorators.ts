@@ -47,7 +47,7 @@ import type { ApplyOptionsCallbackParameters, PieceConstructor } from './types';
  * }
  * ```
  */
-export function ApplyOptions<T extends Piece.Options, Class extends PieceConstructor>(
+export function ApplyOptions<T extends Piece.Options, Class extends PieceConstructor = any>(
 	optionsOrFn: T | ((parameters: ApplyOptionsCallbackParameters) => T)
 ): any {
 	return (DecoratedClass: Class, _context: ClassDecoratorContext) =>
