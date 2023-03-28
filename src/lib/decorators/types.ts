@@ -92,12 +92,6 @@ export type SyntheticClassDecoratorReturn<Target extends PieceConstructor, Conte
 ) => Return | void;
 
 /**
- * The return type of the `Enumerable` decorator when using on a class
- * @param Class A reference to the class being decorated. This should be added automatically by TypeScript.
- */
-export type EnumerableClassReturnType<Class extends PieceConstructor> = (DecoratedClass: Class, context: ClassDecoratorContext) => void | Class;
-
-/**
  * The parameters for the `ApplyOptions` decorator when used with a callback function
  */
 export interface ApplyOptionsCallbackParameters {

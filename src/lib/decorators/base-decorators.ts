@@ -1,5 +1,5 @@
 import type { Piece } from '@sapphire/framework';
-import type { ClassWithName, EnumerableCacheEntry, EnumerableClassReturnType, EnumerableFieldReturnType, PieceConstructor } from './types';
+import type { ClassWithName, EnumerableCacheEntry, EnumerableFieldReturnType, PieceConstructor, SyntheticClassDecoratorReturn } from './types';
 
 const enumerableCache: Map<string, EnumerableCacheEntry[]> = new Map();
 
@@ -9,7 +9,7 @@ const enumerableCache: Map<string, EnumerableCacheEntry[]> = new Map();
  * Without applying this decorator on the class the field {@link Enumerable} decorators will have no effect!
  * @param value Whether the property should be enumerable or not
  */
-export function Enumerable<Class extends PieceConstructor>(): EnumerableClassReturnType<Class>;
+export function Enumerable<Class extends PieceConstructor>(): SyntheticClassDecoratorReturn<Class>;
 /**
  * Decorator that queues the decorated field for being marked as `enumerable` or not based on the parameter value.
  * Apply to the class by adding {@link Enumerable} on the class
