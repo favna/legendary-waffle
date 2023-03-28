@@ -12,14 +12,14 @@
 	"dependencies": {
 		"@sapphire/framework": "^4.2.2",
 		"@sapphire/utilities": "pr-567",
-		"discord-api-types": "^0.37.36",
+		"discord-api-types": "^0.37.37",
 		"discord.js": "^14.8.0"
 	},
 	"devDependencies": {
 		"@sapphire/prettier-config": "pr-567",
 		"@sapphire/ts-config": "pr-567",
-		"@types/node": "^18.15.3",
-		"prettier": "^2.8.4",
+		"@types/node": "^18.15.10",
+		"prettier": "^2.8.7",
 		"typescript": "^5.0.2"
 	},
 	"resolutions": {
