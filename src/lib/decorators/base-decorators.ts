@@ -4,53 +4,42 @@ import type { ClassWithName, EnumerableCacheEntry } from './types';
 
 const enumerableCache: Map<string, EnumerableCacheEntry[]> = new Map();
 
-/**
- * Decorator that sets the enumerable property of the decorated field to `false`.
- */
-export function NonEnumerableOld<This, Value>(_value: undefined, context: ClassFieldDecoratorContext<This, Value>) {
-	return function (this: This, initialValue: Value) {
-		Object.defineProperty(this, context.name, { enumerable: false, configurable: true, writable: true, value: initialValue });
-	};
-}
+export function Enumerable<Class extends Ctor<ConstructorParameters<typeof Piece>>>(): any;
+export function Enumerable<This, Value>(enumerable: boolean): any;
+export function Enumerable<ThisOrClass, Value>(enumerable?: boolean) {
+	if (typeof enumerable === 'boolean') {
+		return (_value: undefined, context: ClassFieldDecoratorContext<ThisOrClass, Value>) =>
+			function (this: ClassWithName, initialValue: Value): Value {
+				const classFields = enumerableCache.get(this.name);
 
-/**
- * Decorator that reads {@link enumerableCache} for the decorated class and sets the enumerable property of any fields decorated with {@link NonEnumerable} to `false`.
- */
-export function NonEnumerableClass<C extends Ctor<ConstructorParameters<typeof Piece>>>(DecoratedClass: C, _context: ClassDecoratorContext): any {
-	return function (...args: ConstructorParameters<typeof Piece>) {
-		const classInstance = new DecoratedClass(...args);
-
-		for (const cacheEntry of (enumerableCache.get(classInstance.name) ?? []).values()) {
-			Object.defineProperty(classInstance, cacheEntry.fieldName, {
-				enumerable: cacheEntry.shouldBeEnumerable
-			});
-		}
-
-		return classInstance;
-	};
-}
-
-/**
- * Decorator that queues the decorated field for being marked as `enumerable` `false`. Apply to the class using {@link NonEnumerableClass}
- */
-export function NonEnumerable<This, Value>(_value: undefined, context: ClassFieldDecoratorContext<This, Value>) {
-	return function (this: ClassWithName, initialValue: Value): Value {
-		const classFields = enumerableCache.get(this.name);
-
-		if (classFields) {
-			classFields.push({
-				fieldName: context.name,
-				shouldBeEnumerable: false
-			});
-		} else {
-			enumerableCache.set(this.name, [
-				{
-					fieldName: context.name,
-					shouldBeEnumerable: false
+				if (classFields) {
+					classFields.push({
+						fieldName: context.name,
+						shouldBeEnumerable: enumerable ?? true
+					});
+				} else {
+					enumerableCache.set(this.name, [
+						{
+							fieldName: context.name,
+							shouldBeEnumerable: enumerable ?? true
+						}
+					]);
 				}
-			]);
-		}
 
-		return initialValue;
-	};
+				return initialValue;
+			};
+	}
+
+	return (DecoratedClass: Ctor<ConstructorParameters<typeof Piece>>, _context: ClassDecoratorContext) =>
+		function (...args: ConstructorParameters<typeof Piece>) {
+			const classInstance = new DecoratedClass(...args);
+
+			for (const cacheEntry of (enumerableCache.get(classInstance.name) ?? []).values()) {
+				Object.defineProperty(classInstance, cacheEntry.fieldName, {
+					enumerable: cacheEntry.shouldBeEnumerable
+				});
+			}
+
+			return classInstance;
+		};
 }

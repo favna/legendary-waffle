@@ -1,6 +1,6 @@
-import { NonEnumerable, NonEnumerableClass } from './lib/decorators';
+import { Enumerable } from './lib/decorators';
 
-@NonEnumerableClass
+@Enumerable()
 class SampleClass {
 	public name: string = 'SampleClass';
 
@@ -8,7 +8,7 @@ class SampleClass {
 		console.log('Hello World!');
 	}
 
-	@NonEnumerable
+	@Enumerable(false)
 	public sampleField: string = 'Hello World!';
 }
 
