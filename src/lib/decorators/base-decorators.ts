@@ -1,11 +1,10 @@
 import type { Piece } from '@sapphire/framework';
-import type { Ctor } from '@sapphire/utilities';
-import type { ClassWithName, EnumerableCacheEntry } from './types';
+import type { ClassWithName, EnumerableCacheEntry, EnumerableClassReturnType, EnumerableFieldReturnType, PieceConstructor } from './types';
 
 const enumerableCache: Map<string, EnumerableCacheEntry[]> = new Map();
 
-export function Enumerable<Class extends Ctor<ConstructorParameters<typeof Piece>>>(): any;
-export function Enumerable<This, Value>(enumerable: boolean): any;
+export function Enumerable<Class extends PieceConstructor>(): EnumerableClassReturnType<Class>;
+export function Enumerable<This, Value>(enumerable: boolean): EnumerableFieldReturnType<This, Value>;
 export function Enumerable<ThisOrClass, Value>(enumerable?: boolean) {
 	if (typeof enumerable === 'boolean') {
 		return (_value: undefined, context: ClassFieldDecoratorContext<ThisOrClass, Value>) =>
@@ -30,7 +29,7 @@ export function Enumerable<ThisOrClass, Value>(enumerable?: boolean) {
 			};
 	}
 
-	return (DecoratedClass: Ctor<ConstructorParameters<typeof Piece>>, _context: ClassDecoratorContext) =>
+	return (DecoratedClass: PieceConstructor, _context: ClassDecoratorContext) =>
 		function (...args: ConstructorParameters<typeof Piece>) {
 			const classInstance = new DecoratedClass(...args);
 

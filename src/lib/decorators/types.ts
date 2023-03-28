@@ -1,4 +1,5 @@
 import type { Piece } from '@sapphire/pieces';
+import type { Ctor } from '@sapphire/utilities';
 
 /**
  * The function precondition interface.
@@ -59,3 +60,27 @@ export interface EnumerableCacheEntry {
  * This is a stand-in for `typeof Piece` because its other properties are not necessary.
  */
 export type ClassWithName = Pick<Piece, 'name'>;
+
+/**
+ * The constructor of the {@link Piece} class using {@link Ctor} and {@link ConstructorParameters}
+ */
+export type PieceConstructor = Ctor<ConstructorParameters<typeof Piece>>;
+
+/**
+ * The return type for the `Enumerable` decorator when using on a class field
+ * @param This a reference to the `this` context of the decorated class. This should be added automatically by TypeScript.
+ * @param Value a reference to the current value being decorated. This should be added automatically by TypeScript.
+ */
+export type EnumerableFieldReturnType<This, Value> = (
+	_value: undefined,
+	context: ClassFieldDecoratorContext<This, Value>
+) => (this: ClassWithName, initialValue: Value) => Value;
+
+/**
+ * The return type of the `Enumerable` decorator when using on a class
+ * @param Class A reference to the class being decorated. This should be added automatically by TypeScript.
+ */
+export type EnumerableClassReturnType<Class extends Ctor<ConstructorParameters<typeof Piece>>> = (
+	DecoratedClass: Class,
+	_context: ClassDecoratorContext
+) => void | Class;
