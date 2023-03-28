@@ -1,5 +1,5 @@
 import { Piece, container } from '@sapphire/framework';
-import type { ApplyOptionsCallbackParameters, PieceConstructor } from './types';
+import type { ApplyOptionsCallbackParameters, PieceConstructor, SyntheticClassDecoratorReturn } from './types';
 
 /**
  * Decorator function that applies given options to any Sapphire piece
@@ -49,11 +49,14 @@ import type { ApplyOptionsCallbackParameters, PieceConstructor } from './types';
  */
 export function ApplyOptions<T extends Piece.Options>(
 	optionsOrFn: T | ((parameters: ApplyOptionsCallbackParameters) => T)
-): any {
+): SyntheticClassDecoratorReturn<PieceConstructor, ClassDecoratorContext, any> {
 	return (DecoratedClass: PieceConstructor, _context: ClassDecoratorContext) =>
-		(...[context, baseOptions]: ConstructorParameters<typeof Piece>) =>
-			new DecoratedClass(context, {
+		function (...[context, baseOptions]: ConstructorParameters<typeof Piece>) {
+			const classInstance = new DecoratedClass(context, {
 				...baseOptions,
 				...(typeof optionsOrFn === 'function' ? optionsOrFn({ container, context }) : optionsOrFn)
 			});
+
+			return classInstance;
+		};
 }

@@ -1,4 +1,4 @@
-import type { Piece, Container } from '@sapphire/pieces';
+import type { Container, Piece } from '@sapphire/pieces';
 import type { Ctor } from '@sapphire/utilities';
 
 /**
@@ -77,13 +77,25 @@ export type EnumerableFieldReturnType<This, Value> = (
 ) => (this: ClassWithName, initialValue: Value) => Value;
 
 /**
+ * A synthetic type of a class decorator return value
+ * @param Target The type for the decorated class.
+ * @param Context The type for the *decorator context*.
+ * A context type based on the kind of decoration type, intersected with an object type consisting
+ * of the target's *`name`, `placement`, and `visibility`*.
+ * @param Return The allowed type for the decorator's return value. Note that any decorator may return `void` / `undefined`.
+ * For a class decorator, this will be {@link T}.
+ *
+ */
+export type SyntheticClassDecoratorReturn<Target extends PieceConstructor, Context = ClassDecoratorContext, Return = Target> = (
+	target: Target,
+	context: Context
+) => Return | void;
+
+/**
  * The return type of the `Enumerable` decorator when using on a class
  * @param Class A reference to the class being decorated. This should be added automatically by TypeScript.
  */
-export type EnumerableClassReturnType<Class extends Ctor<ConstructorParameters<typeof Piece>>> = (
-	DecoratedClass: Class,
-	_context: ClassDecoratorContext
-) => void | Class;
+export type EnumerableClassReturnType<Class extends PieceConstructor> = (DecoratedClass: Class, context: ClassDecoratorContext) => void | Class;
 
 /**
  * The parameters for the `ApplyOptions` decorator when used with a callback function
