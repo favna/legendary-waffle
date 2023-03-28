@@ -1,10 +1,10 @@
-import { Piece } from '@sapphire/framework';
+import { Command } from '@sapphire/framework';
 import { ApplyOptions, Enumerable } from './lib/decorators';
 import { fakePieceContext } from './lib/fakePieceData';
 
 @Enumerable()
-@ApplyOptions<Piece.Options>({ name: 'a very cool class' })
-class SampleClass extends Piece {
+@ApplyOptions<Command.Options>({ name: 'a very cool class' })
+class SampleClass extends Command {
 	public sampleMethod(): void {
 		console.log('Hello World!');
 	}
