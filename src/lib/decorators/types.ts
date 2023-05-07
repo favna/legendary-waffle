@@ -89,7 +89,7 @@ export type EnumerableFieldReturnType<This, Value> = (
 export type SyntheticClassDecoratorReturn<Target extends PieceConstructor, Context = ClassDecoratorContext, Return = Target> = (
 	target: Target,
 	context: Context
-) => Return | void;
+) => Return | undefined;
 
 /**
  * The parameters for the `ApplyOptions` decorator when used with a callback function
